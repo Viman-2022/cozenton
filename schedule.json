@@ -1,0 +1,60 @@
+{
+  "Monday": [
+    {"time": "9.30am to 10.15am", "session": "RockBox"},
+    {"time": "10.30am to 11.30am", "session": "Clubbercise"},
+    {"time": "11.30am to 12.15pm", "session": "Yoga"},
+    {"time": "11.30am to 12.15pm", "session": "Aqua V1BE"},
+    {"time": "12.30pm to 1.15pm", "session": "Senior Circuits"},
+    {"time": "5pm to 5.45pm", "session": "Booty BandZ"},
+    {"time": "6pm to 6.45pm", "session": "Totally Shredded"},
+    {"time": "7pm to 7.45pm", "session": "L1FT"},
+    {"time": "8pm to 8.45pm", "session": "Line Dancing (improvers)"}
+  ],
+  "Tuesday": [
+    {"time": "9.30am to 10.15am", "session": "STR1KE"},
+    {"time": "10.30am to 11.15am", "session": "Body conditioning"},
+    {"time": "11.00am to 11.45am", "session": "Aqua"},
+    {"time": "11.30am to 12.15pm", "session": "Pilates"},
+    {"time": "12.30pm to 1.15pm", "session": "Chair Pilates"},
+    {"time": "1.30pm to 2.15pm", "session": "Senior Circuits"},
+    {"time": "5.00pm to 5.45pm", "session": "Yoga"},
+    {"time": "6.00pm to 6.45pm", "session": "Circuits"},
+    {"time": "7.00pm to 7.45pm", "session": "Line Dancing (beginners)"}
+  ],
+  "Wednesday": [
+    {"time": "07:00 - 07:45", "session": "Yoga"},
+    {"time": "09:15 - 10:00", "session": "Line Dancing"},
+    {"time": "10:30 - 11:15", "session": "Senior Circuits"},
+    {"time": "11:30 - 12:30", "session": "L!FT"},
+    {"time": "18:00 - 18:45", "session": "Zumba Toning"},
+    {"time": "19:00 - 19:45", "session": "Circuits"},
+    {"time": "19:00 - 19:45", "session": "Aqua Combat"},
+    {"time": "20:00 - 20:45", "session": "Pilates"}
+  ],
+  "Thursday": [
+    {"time": "09:30 - 10:15", "session": "Step"},
+    {"time": "10:30 - 11:15", "session": "Legs Bums Tums"},
+    {"time": "11:30 - 12:15", "session": "Kettlebells"},
+    {"time": "12:30 - 13:15", "session": "Pilates"},
+    {"time": "13:30 - 14:15", "session": "Chair Fit"},
+    {"time": "18:00 - 18:45", "session": "RockBox"},
+    {"time": "19:00 - 19:45", "session": "Clubbercise"}
+  ],
+  "Friday": [
+    {"time": "07:00 - 07:45", "session": "Yoga"},
+    {"time": "09:00 - 09:45", "session": "Aqua Combat"},
+    {"time": "10:00 - 10:45", "session": "Toning at Ten"},
+    {"time": "11:00 - 11:45", "session": "Zumba"},
+    {"time": "12:15pm - 01:00pm", "session": "Senior Circuits"}
+  ],
+  "Saturday": [
+    {"time": "9am to 9.45am", "session": "Zumba"},
+    {"time": "10am to 10.45am", "session": "Step"},
+    {"time": "11am to 11.45am", "session": "L!FT"}
+  ],
+  "Sunday": [
+    {"time": "8.15am to 9am", "session": "Yoga"},
+    {"time": "9.15am to 10am", "session": "Circuits"},
+    {"time": "10.15 to 11am", "session": "Kettlebells"}
+  ]
+}
