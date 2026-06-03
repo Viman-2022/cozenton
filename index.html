@@ -87,7 +87,7 @@
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
         <span>My Plan</span>
       </button>
-      <button class="nav-btn" data-view="alarms">
+      
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
         <span>Alarms</span>
       </button>
@@ -100,51 +100,6 @@
         <p class="view-sub">Your highlighted sessions across the week</p>
       </div>
       <div class="my-sessions-list" id="mySessionsList"></div>
-    </section>
-
-    <!-- Alarms View (hidden by default) -->
-    <section class="view-panel" id="viewAlarms" style="display:none;">
-      <div class="view-header">
-        <h2>🔔 Session Alarms</h2>
-        <p class="view-sub">Get reminded before your selected classes start</p>
-      </div>
-      <div class="alarm-settings" id="alarmSettings">
-        <div class="alarm-option-card">
-          <div class="alarm-option-info">
-            <h3>Enable Alarms</h3>
-            <p>Receive a notification before each highlighted session</p>
-          </div>
-          <label class="toggle-switch">
-            <input type="checkbox" id="alarmToggle">
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
-        <div class="alarm-option-card">
-          <div class="alarm-option-info">
-            <h3>Reminder Time</h3>
-            <p>How many minutes before the class starts?</p>
-          </div>
-          <div class="reminder-select-group">
-            <button class="reminder-btn" data-mins="15">15 min</button>
-            <button class="reminder-btn active" data-mins="30">30 min</button>
-            <button class="reminder-btn" data-mins="60">1 hour</button>
-          </div>
-        </div>
-        <div class="alarm-option-card">
-          <div class="alarm-option-info">
-            <h3>Alarm Sound</h3>
-            <p>Play a sound when the alarm fires</p>
-          </div>
-          <label class="toggle-switch">
-            <input type="checkbox" id="alarmSoundToggle" checked>
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
-      </div>
-      <div class="alarm-upcoming" id="alarmUpcoming">
-        <h3 class="upcoming-title">Upcoming Alarms</h3>
-        <div class="upcoming-list" id="upcomingAlarmList"></div>
-      </div>
     </section>
 
   </div>

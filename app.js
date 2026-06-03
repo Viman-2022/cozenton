@@ -224,7 +224,7 @@
   };
 
   // Create HTML Card Node for a Session
-  const createSessionCard = (session, day, index) => {
+  const createSessionCard = (session, day, index, isMyPlan = false) => {
     const card = document.createElement('div');
     card.className = 'session-card';
     if (session.starred) {
@@ -233,11 +233,9 @@
 
     const timeHtml = formatTimeHtml(session.time);
     const starClass = session.starred ? 'action-btn starred' : 'action-btn';
-    const alarmClass = session.alarmMins ? 'action-btn alarm-set' : 'action-btn';
-    const alarmIcon = session.alarmMins ? '⏰' : '🔔';
 
-    // Add remove button (visible in My Plan view)
-    const removeButtonHTML = `<button class="action-btn" data-action="remove" title="Remove session">🗑️</button>`;
+    // Add remove button (visible only in My Plan view)
+    const removeButtonHTML = isMyPlan ? `<button class="action-btn" data-action="remove" title="Remove session">🗑️</button>` : '';
     card.innerHTML = `
       <div class="session-time-col">
         ${timeHtml}
@@ -252,9 +250,6 @@
         <button class="${starClass}" data-action="star" title="Highlight session">
           ${session.starred ? '★' : '☆'}
         </button>
-        <button class="${alarmClass}" data-action="alarm" title="Set reminder">
-          ${alarmIcon}
-        </button>
         ${removeButtonHTML}
       </div>
     `;
@@ -266,37 +261,6 @@
       // If unstarred, clear any specific alarm minutes
       if (!session.starred) {
         session.alarmMins = null;
-      }
-      saveState();
-      renderActiveView();
-    });
-
-    card.querySelector('[data-action="alarm"]').addEventListener('click', (e) => {
-      e.stopPropagation();
-      if (!session.starred) {
-        showToast('Star this session first to set an alarm.', '⭐');
-        return;
-      }
-
-      if (session.alarmMins) {
-        // Clear alarm
-        session.alarmMins = null;
-        session.reminded = false;
-        showToast(`Alarm cleared for ${session.session}`, '🔕');
-      } else {
-        // Set alarm (prompts for custom minutes, default to current global setting)
-        const input = prompt(`Remind you how many minutes before ${session.session}?`, state.reminderMins);
-        if (input === null) return; // user cancelled
-        
-        const mins = parseInt(input, 10);
-        if (isNaN(mins) || mins <= 0) {
-          showToast('Invalid reminder minutes.', '⚠️');
-          return;
-        }
-        
-        session.alarmMins = mins;
-        session.reminded = false;
-        showToast(`Alarm set ${mins}m before ${session.session}`, '⏰');
       }
       saveState();
       renderActiveView();
@@ -373,7 +337,7 @@
         groupList.className = 'session-list';
 
         starred.forEach((session, index) => {
-          groupList.appendChild(createSessionCard(session, day, index));
+          groupList.appendChild(createSessionCard(session, day, index, true));
         });
 
         dayGroup.appendChild(groupList);
@@ -389,73 +353,6 @@
           <p>Highlight classes on the Timetable tab to build your weekly plan.</p>
         </div>
       `;
-    }
-  };
-
-  // 3. Render Alarms View
-  const renderAlarmsView = () => {
-    // Sync settings controls
-    const alarmToggle = document.getElementById('alarmToggle');
-    const alarmSoundToggle = document.getElementById('alarmSoundToggle');
-    if (alarmToggle) alarmToggle.checked = state.alarmsEnabled;
-    if (alarmSoundToggle) alarmSoundToggle.checked = state.alarmSoundEnabled;
-
-    // Sync reminder buttons
-    document.querySelectorAll('.reminder-btn').forEach(btn => {
-      const btnMins = parseInt(btn.dataset.mins, 10);
-      if (btnMins === state.reminderMins) {
-        btn.classList.add('active');
-      } else {
-        btn.classList.remove('active');
-      }
-    });
-
-    // Render list of upcoming alarms
-    const listContainer = document.getElementById('upcomingAlarmList');
-    if (!listContainer) return;
-    listContainer.innerHTML = '';
-
-    const alarms = [];
-    DAYS_ORDER.forEach(day => {
-      (state.schedule[day] || []).forEach(session => {
-        if (session.starred) {
-          // If alarms enabled globally, set default if not specified
-          const alarmMins = session.alarmMins || (state.alarmsEnabled ? state.reminderMins : null);
-          if (alarmMins) {
-            alarms.push({
-              day,
-              session: session.session,
-              time: session.time,
-              mins: alarmMins
-            });
-          }
-        }
-      });
-    });
-
-    if (alarms.length === 0 || !state.alarmsEnabled) {
-      listContainer.innerHTML = `
-        <div class="empty-state" style="padding: 1.5rem 0;">
-          <span class="empty-icon">⏰</span>
-          <h3>No Active Alarms</h3>
-          <p>${state.alarmsEnabled ? 'Set individual alarms by clicking the bell icon on starred sessions.' : 'Enable alarms above to see upcoming reminders.'}</p>
-        </div>
-      `;
-    } else {
-      alarms.forEach(alarm => {
-        const card = document.createElement('div');
-        card.className = 'upcoming-alarm-card';
-        card.innerHTML = `
-          <div class="alarm-details">
-            <span class="class-name">${alarm.session}</span>
-            <span class="alarm-time">${alarm.day} at ${alarm.time}</span>
-          </div>
-          <span class="reminder-btn active" style="margin: 0; pointer-events: none;">
-            -${alarm.mins}m
-          </span>
-        `;
-        listContainer.appendChild(card);
-      });
     }
   };
 
@@ -476,9 +373,6 @@
     } else if (state.currentView === 'mysessions') {
       if (viewMySessions) viewMySessions.style.display = 'block';
       renderMyPlan();
-    } else if (state.currentView === 'alarms') {
-      if (viewAlarms) viewAlarms.style.display = 'block';
-      renderAlarmsView();
     }
   };
 
@@ -523,98 +417,6 @@
         saveState(); // persist filter
       });
     });
-
-    // Alarms page settings toggles
-    const alarmToggle = document.getElementById('alarmToggle');
-    if (alarmToggle) {
-      alarmToggle.addEventListener('change', (e) => {
-        state.alarmsEnabled = e.target.checked;
-        saveState();
-        renderAlarmsView();
-      });
-    }
-
-    const alarmSoundToggle = document.getElementById('alarmSoundToggle');
-    if (alarmSoundToggle) {
-      alarmSoundToggle.addEventListener('change', (e) => {
-        state.alarmSoundEnabled = e.target.checked;
-        saveState();
-        renderAlarmsView();
-      });
-    }
-
-    // Reminder time buttons
-    document.querySelectorAll('.reminder-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        state.reminderMins = parseInt(btn.dataset.mins, 10);
-        saveState();
-        renderAlarmsView();
-      });
-    });
-  };
-
-  // --- Real-time Alarm Monitor ---
-  const startAlarmMonitor = () => {
-    const checkAlarms = () => {
-      if (!state.alarmsEnabled) return;
-      
-      const now = new Date();
-      const currentDayName = now.toLocaleDateString('en-US', { weekday: 'long' });
-      
-      const sessions = state.schedule[currentDayName] || [];
-      sessions.forEach(session => {
-        // Trigger if starred and has alarm configured (defaults to reminderMins if not custom)
-        if (session.starred) {
-          const alarmMins = session.alarmMins || state.reminderMins;
-          if (!alarmMins || session.reminded) return;
-
-          const parsed = parseTime(session.time);
-          const sessionTime = new Date(now);
-          sessionTime.setHours(parsed.hours, parsed.minutes, 0, 0);
-
-          const timeDiffMins = (sessionTime.getTime() - now.getTime()) / 60000;
-
-          // If session starts in the window: between 0 and alarmMins
-          if (timeDiffMins > 0 && timeDiffMins <= alarmMins) {
-            session.reminded = true;
-            saveState();
-            
-            // Trigger sound & notification
-            playBeep();
-            showToast(`Upcoming: "${session.session}" starts in ${Math.round(timeDiffMins)} minutes!`, '⏰');
-            
-            if ('Notification' in window && Notification.permission === 'granted') {
-              new Notification('JJM Gym Class Reminder', {
-                body: `"${session.session}" is starting at ${session.time}.`,
-                icon: 'jjm_brand_1780443891862.png'
-              });
-            }
-          }
-        }
-      });
-
-      // Daily reset: Reset reminded flag for classes that have already ended
-      DAYS_ORDER.forEach(day => {
-        (state.schedule[day] || []).forEach(session => {
-          if (session.reminded) {
-            const parsed = parseTime(session.time);
-            const sessionTime = new Date(now);
-            sessionTime.setHours(parsed.hours, parsed.minutes, 0, 0);
-            
-            // If class finished 30 minutes ago, reset reminded status for next week
-            const finishedTime = sessionTime.getTime() + (45 * 60 * 1000); // assume 45 min duration
-            if (now.getTime() > finishedTime) {
-              session.reminded = false;
-              saveState();
-            }
-          }
-        });
-      });
-    };
-
-    // Run check immediately and then every 20 seconds
-    checkAlarms();
-    setInterval(checkAlarms, 20000);
   };
 
   // --- Initialize App ---
@@ -681,7 +483,7 @@
     renderActiveView();
 
     // 7. Start monitor loop
-    startAlarmMonitor();
+    
   };
 
   document.addEventListener('DOMContentLoaded', init);
