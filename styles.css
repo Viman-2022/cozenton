@@ -104,7 +104,7 @@ body {
   letter-spacing: 0.5px;
 }
 
-.link-btn {
+.exit-btn {
   width: 36px;
   height: 36px;
   border-radius: 50%;
@@ -114,7 +114,15 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 0.9rem;
+  cursor: pointer;
   transition: all 0.2s ease;
+  margin-left: 0.5rem;
+}
+.exit-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
 }
 
 .link-btn:hover {

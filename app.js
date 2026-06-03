@@ -104,16 +104,20 @@
   };
 
   // --- State Persistence ---
-  const saveState = () => {
-    try {
-      localStorage.setItem('jjm_gym_schedule', JSON.stringify(state.schedule));
-      localStorage.setItem('jjm_alarms_enabled', state.alarmsEnabled);
-      localStorage.setItem('jjm_alarm_sound', state.alarmSoundEnabled);
-      localStorage.setItem('jjm_reminder_mins', state.reminderMins);
-    } catch (e) {
-      console.error('Failed to save state to localStorage', e);
-    }
-  };
+    const saveState = () => {
+      try {
+        localStorage.setItem('jjm_gym_schedule', JSON.stringify(state.schedule));
+        localStorage.setItem('jjm_alarms_enabled', state.alarmsEnabled);
+        localStorage.setItem('jjm_alarm_sound', state.alarmSoundEnabled);
+        localStorage.setItem('jjm_reminder_mins', state.reminderMins);
+        // Persist UI state
+        localStorage.setItem('jjm_active_day', state.activeDay);
+        localStorage.setItem('jjm_filter', state.filter);
+        localStorage.setItem('jjm_current_view', state.currentView);
+      } catch (e) {
+        console.error('Failed to save state to localStorage', e);
+      }
+    };
 
   const loadState = () => {
     try {
@@ -487,6 +491,7 @@
         btn.classList.add('active');
         state.currentView = btn.dataset.view;
         renderActiveView();
+        saveState(); // persist current view
       });
     });
 
@@ -497,6 +502,7 @@
         btn.classList.add('active');
         state.activeDay = parseInt(btn.dataset.day, 10);
         renderTimetable();
+        saveState(); // persist active day
       });
     });
 
@@ -507,6 +513,7 @@
         btn.classList.add('active');
         state.filter = btn.dataset.filter;
         renderTimetable();
+        saveState(); // persist filter
       });
     });
 
@@ -605,11 +612,31 @@
 
   // --- Initialize App ---
   const init = async () => {
-    // 1. Sync day tabs active class initially
+    // Initial UI state will be restored from localStorage below
+
+    // Load UI state persistence before applying active classes
+    const savedActiveDay = localStorage.getItem('jjm_active_day');
+    if (savedActiveDay !== null) {
+      state.activeDay = parseInt(savedActiveDay, 10);
+    }
+    const savedFilter = localStorage.getItem('jjm_filter');
+    if (savedFilter !== null) {
+      state.filter = savedFilter;
+    }
+    const savedCurrentView = localStorage.getItem('jjm_current_view');
+    if (savedCurrentView !== null) {
+      state.currentView = savedCurrentView;
+    }
+    // Apply persisted active tab class
     const activeTab = document.querySelector(`.day-tab[data-day="${state.activeDay}"]`);
     if (activeTab) activeTab.classList.add('active');
-
-    // 2. Load cached state & details
+    // Apply persisted filter chip active class
+    const activeFilterChip = document.querySelector(`.filter-chip[data-filter="${state.filter}"]`);
+    if (activeFilterChip) activeFilterChip.classList.add('active');
+    // Apply persisted bottom nav active class
+    const activeNavBtn = document.querySelector(`.bottom-nav button[data-view="${state.currentView}"]`);
+    if (activeNavBtn) activeNavBtn.classList.add('active');
+    // Load persisted schedule and other state
     loadState();
 
     // 3. Load dynamic schedules
@@ -639,11 +666,8 @@
     const exitBtn = document.getElementById('exitBtn');
     if (exitBtn) {
       exitBtn.addEventListener('click', () => {
-        // Attempt to close the window; fallback to redirect
-        window.close();
-        if (!window.closed) {
-          window.location.href = 'about:blank';
-        }
+        // Redirect to a blank page to simulate exit
+        window.location.href = 'about:blank';
       });
     }
     // 6. Draw active layout
