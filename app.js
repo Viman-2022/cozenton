@@ -45,6 +45,10 @@
     }
   };
 
+  const getDayAbbreviation = (day) => {
+    return day.substring(0, 3).toUpperCase();
+  };
+
   // --- Utility: Play Premium Beep ---
   const playBeep = () => {
     if (!state.alarmSoundEnabled) return;
@@ -224,7 +228,7 @@
   };
 
   // Create HTML Card Node for a Session
-  const createSessionCard = (session, day, index, isMyPlan = false) => {
+  const createSessionCard = (session, day, index) => {
     const card = document.createElement('div');
     card.className = 'session-card';
     if (session.starred) {
@@ -234,8 +238,6 @@
     const timeHtml = formatTimeHtml(session.time);
     const starClass = session.starred ? 'action-btn starred' : 'action-btn';
 
-    // Add remove button (visible only in My Plan view)
-    const removeButtonHTML = isMyPlan ? `<button class="action-btn" data-action="remove" title="Remove session">🗑️</button>` : '';
     card.innerHTML = `
       <div class="session-time-col">
         ${timeHtml}
@@ -250,7 +252,6 @@
         <button class="${starClass}" data-action="star" title="Highlight session">
           ${session.starred ? '★' : '☆'}
         </button>
-        ${removeButtonHTML}
       </div>
     `;
 
@@ -266,59 +267,17 @@
       renderActiveView();
     });
 
-    // Remove session handler (used in My Plan view)
-    const removeBtn = card.querySelector('[data-action="remove"]');
-    if (removeBtn) {
-      removeBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        // Find and remove the session from the day's schedule
-        const daySchedule = state.schedule[day] || [];
-        const idx = daySchedule.findIndex(s => s.session === session.session && s.time === session.time);
-        if (idx !== -1) {
-          daySchedule.splice(idx, 1);
-          state.schedule[day] = daySchedule;
-          saveState();
-          renderActiveView();
-        }
-      });
-    }
+    
 
     return card;
   };
 
-  // 1. Render Timetable View
-  const renderTimetable = () => {
-    const listContainer = document.getElementById('sessionList');
-    const emptyState = document.getElementById('emptyState');
-    if (!listContainer || !emptyState) return;
 
-    listContainer.innerHTML = '';
-    const dayName = DAYS_ORDER[state.activeDay];
-    const sessions = state.schedule[dayName] || [];
-    
-    // Apply active filter (All vs Starred)
-    let filteredSessions = sessions;
-    if (state.filter === 'selected') {
-      filteredSessions = sessions.filter(s => s.starred);
-    }
-
-    if (filteredSessions.length === 0) {
-      emptyState.style.display = 'flex';
-      listContainer.appendChild(emptyState);
-    } else {
-      emptyState.style.display = 'none';
-      filteredSessions.forEach((session, index) => {
-        listContainer.appendChild(createSessionCard(session, dayName, index));
-      });
-    }
-  };
-
-  // 2. Render My Plan View
+  // 2. Render My Sessions (My Plan) View
   const renderMyPlan = () => {
     const container = document.getElementById('mySessionsList');
     if (!container) return;
     container.innerHTML = '';
-
     let hasAnyStarred = false;
 
     DAYS_ORDER.forEach(day => {
@@ -330,16 +289,14 @@
 
         const dayHeader = document.createElement('div');
         dayHeader.className = 'my-day-title';
-        dayHeader.textContent = day;
+        dayHeader.textContent = getDayAbbreviation(day);
         dayGroup.appendChild(dayHeader);
 
         const groupList = document.createElement('div');
         groupList.className = 'session-list';
-
         starred.forEach((session, index) => {
-          groupList.appendChild(createSessionCard(session, day, index, true));
+          groupList.appendChild(createSessionCard(session, day, index));
         });
-
         dayGroup.appendChild(groupList);
         container.appendChild(dayGroup);
       }
@@ -351,10 +308,11 @@
           <span class="empty-icon">⭐</span>
           <h3>No Highlighted Sessions</h3>
           <p>Highlight classes on the Timetable tab to build your weekly plan.</p>
-        </div>
-      `;
+        </div>`;
     }
   };
+
+
 
   const renderActiveView = () => {
     // Hide all view panels first
@@ -451,22 +409,7 @@
     // 3. Load dynamic schedules
     await loadSchedule();
 
-    // 4. Set up user gesture click for sound & notification request
-    document.addEventListener('click', function requestPermission() {
-      // AudioContext unlock
-      try {
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        if (audioCtx.state === 'suspended') {
-          audioCtx.resume();
-        }
-      } catch (_) {}
 
-      // Browser Notification unlock
-      if ('Notification' in window && Notification.permission === 'default') {
-        Notification.requestPermission();
-      }
-      document.removeEventListener('click', requestPermission);
-    }, { once: true });
 
     // 5. Initialize layout event handlers
     initNavHandlers();
