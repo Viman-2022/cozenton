@@ -232,6 +232,8 @@
     const alarmClass = session.alarmMins ? 'action-btn alarm-set' : 'action-btn';
     const alarmIcon = session.alarmMins ? '⏰' : '🔔';
 
+    // Add remove button (visible in My Plan view)
+    const removeButtonHTML = `<button class="action-btn" data-action="remove" title="Remove session">🗑️</button>`;
     card.innerHTML = `
       <div class="session-time-col">
         ${timeHtml}
@@ -249,6 +251,7 @@
         <button class="${alarmClass}" data-action="alarm" title="Set reminder">
           ${alarmIcon}
         </button>
+        ${removeButtonHTML}
       </div>
     `;
 
@@ -294,6 +297,23 @@
       saveState();
       renderActiveView();
     });
+
+    // Remove session handler (used in My Plan view)
+    const removeBtn = card.querySelector('[data-action="remove"]');
+    if (removeBtn) {
+      removeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        // Find and remove the session from the day's schedule
+        const daySchedule = state.schedule[day] || [];
+        const idx = daySchedule.findIndex(s => s.session === session.session && s.time === session.time);
+        if (idx !== -1) {
+          daySchedule.splice(idx, 1);
+          state.schedule[day] = daySchedule;
+          saveState();
+          renderActiveView();
+        }
+      });
+    }
 
     return card;
   };
@@ -615,6 +635,17 @@
     // 5. Initialize layout event handlers
     initNavHandlers();
 
+    // Exit button handler
+    const exitBtn = document.getElementById('exitBtn');
+    if (exitBtn) {
+      exitBtn.addEventListener('click', () => {
+        // Attempt to close the window; fallback to redirect
+        window.close();
+        if (!window.closed) {
+          window.location.href = 'about:blank';
+        }
+      });
+    }
     // 6. Draw active layout
     renderActiveView();
 
