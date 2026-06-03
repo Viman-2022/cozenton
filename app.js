@@ -264,7 +264,9 @@
         session.alarmMins = null;
       }
       saveState();
-      renderActiveView();
+      // Refresh both views to keep UI in sync
+      renderTimetable();
+      renderMyPlan();
     });
 
     
