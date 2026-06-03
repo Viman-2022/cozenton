@@ -265,11 +265,11 @@
       }
       saveState();
       // Reset filter to show all classes after a toggle, so stars can be added again easily
-      state.filter = 'all';
-      const allChip = document.querySelector('.filter-chip[data-filter="all"]');
-      const selectedChip = document.querySelector('.filter-chip[data-filter="selected"]');
-      if (allChip) allChip.classList.add('active');
-      if (selectedChip) selectedChip.classList.remove('active');
+state.filter = 'all';
+const allChip = document.querySelector('.filter-chip[data-filter="all"]');
+const selectedChip = document.querySelector('.filter-chip[data-filter="selected"]');
+if (allChip) allChip.classList.add('active');
+if (selectedChip) selectedChip.classList.remove('active');
       // Refresh both views to keep UI in sync
       renderTimetable();
       renderMyPlan();
