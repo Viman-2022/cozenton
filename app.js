@@ -498,11 +498,18 @@
     // Weekday tabs
     document.querySelectorAll('.day-tabs button').forEach(btn => {
       btn.addEventListener('click', () => {
+        // Reset filter to 'all' when changing day to avoid empty views
+        state.filter = 'all';
+        // Update filter chip UI
+        document.querySelectorAll('.filter-chip').forEach(f => f.classList.remove('active'));
+        const allChip = document.querySelector('.filter-chip[data-filter="all"]');
+        if (allChip) allChip.classList.add('active');
+        // Persist changes
+        saveState();
         document.querySelectorAll('.day-tabs button').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         state.activeDay = parseInt(btn.dataset.day, 10);
         renderTimetable();
-        saveState(); // persist active day
       });
     });
 
