@@ -1,0 +1,636 @@
+/* -------------------------------------------------
+   JJM Gym Classes – Premium Dark Theme
+   ------------------------------------------------- */
+
+:root {
+  --bg-main: #080c14;
+  --bg-card: rgba(18, 26, 44, 0.7);
+  --bg-card-hover: rgba(30, 41, 69, 0.85);
+  --accent-orange: #ff5e36;
+  --accent-cyan: #00f2fe;
+  --text-primary: #f1f5f9;
+  --text-muted: #94a3b8;
+  --radius-lg: 20px;
+  --radius-md: 14px;
+  --radius-sm: 8px;
+  --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --gradient: linear-gradient(135deg, var(--accent-orange), var(--accent-cyan));
+  --font-family: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* Import Outfit font from Google Fonts for a premium look */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: var(--font-family);
+  background: var(--bg-main);
+  color: var(--text-primary);
+  overflow: hidden;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+}
+
+/* App Shell container */
+.app-shell {
+  width: 100%;
+  max-width: 500px; /* typical mobile view constraint */
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(circle at 50% 0%, rgba(255, 94, 54, 0.12), transparent 60%),
+              radial-gradient(circle at 100% 100%, rgba(0, 242, 254, 0.08), transparent 50%),
+              #080c14;
+  position: relative;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.6);
+}
+
+/* ==== Header ==== */
+.app-header {
+  padding: 1.2rem 1.2rem 0.8rem;
+  background: rgba(8, 12, 20, 0.8);
+  backdrop-filter: blur(20px);
+  z-index: 100;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.brand-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--gradient);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(255, 94, 54, 0.3);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.brand-text h1 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+}
+
+.brand-sub {
+  font-size: 0.75rem;
+  color: var(--accent-cyan);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.link-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.link-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+/* ==== Day Selector Tabs ==== */
+.day-tabs {
+  display: flex;
+  overflow-x: auto;
+  gap: 0.4rem;
+  padding-bottom: 0.2rem;
+  scrollbar-width: none; /* Hide standard Firefox scrollbar */
+}
+
+.day-tabs::-webkit-scrollbar {
+  display: none; /* Hide Chrome scrollbar */
+}
+
+.day-tab {
+  flex: 0 0 calc(14.28% - 0.35rem); /* evenly split 7 days, allowing for gaps */
+  min-width: 46px;
+  padding: 0.6rem 0;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 0.8rem;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: center;
+}
+
+.day-tab.active {
+  color: #fff;
+  background: var(--accent-orange);
+  border-color: rgba(255, 94, 54, 0.4);
+  box-shadow: 0 4px 12px rgba(255, 94, 54, 0.25);
+  transform: scale(1.03);
+}
+
+.day-tab:hover:not(.active) {
+  background: rgba(255, 255, 255, 0.07);
+  color: var(--text-primary);
+}
+
+/* ==== Main Content ==== */
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Filter chips */
+.filter-bar {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.filter-chip {
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-chip.active {
+  background: rgba(0, 242, 254, 0.12);
+  border-color: rgba(0, 242, 254, 0.3);
+  color: var(--accent-cyan);
+}
+
+.filter-chip:hover:not(.active) {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* ==== Session Cards (Fixed layout for mobile) ==== */
+.session-list, .my-sessions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.session-card {
+  display: flex;
+  align-items: center;
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  padding: 0.8rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: var(--shadow);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+}
+
+.session-card:hover {
+  transform: translateY(-2px);
+  background: var(--bg-card-hover);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Left column - Time display (vertical stack, never wraps) */
+.session-time-col {
+  flex: 0 0 88px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  padding-right: 0.8rem;
+  line-height: 1.25;
+}
+
+.time-start {
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.time-end {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 400;
+  margin-top: 0.1rem;
+}
+
+/* Middle column - Session Details */
+.session-info-col {
+  flex: 1;
+  padding-left: 1rem;
+  padding-right: 0.5rem;
+  min-width: 0; /* allows text truncation if name is exceptionally long */
+}
+
+.session-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.15rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.session-sub {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+/* Right column - Action buttons */
+.session-actions-col {
+  flex: 0 0 auto;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.action-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.action-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.action-btn:active {
+  transform: scale(0.9);
+}
+
+.action-btn.starred {
+  color: #ffeb3b;
+  background: rgba(255, 235, 59, 0.08);
+  border-color: rgba(255, 235, 59, 0.25);
+  text-shadow: 0 0 6px rgba(255, 235, 59, 0.3);
+}
+
+.action-btn.alarm-set {
+  color: #ff5e36;
+  background: rgba(255, 94, 54, 0.08);
+  border-color: rgba(255, 94, 54, 0.25);
+}
+
+/* ==== Empty state ==== */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  text-align: center;
+  color: var(--text-muted);
+  margin: auto 0;
+}
+
+.empty-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.empty-state h3 {
+  color: #fff;
+  margin-bottom: 0.4rem;
+  font-size: 1.1rem;
+}
+
+.empty-state p {
+  font-size: 0.85rem;
+  max-width: 250px;
+}
+
+/* ==== Bottom Nav ==== */
+.bottom-nav {
+  height: 64px;
+  background: rgba(10, 15, 26, 0.85);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding-bottom: env(safe-area-inset-bottom, 0); /* handle iOS home bar spacing */
+  z-index: 100;
+}
+
+.nav-btn {
+  background: transparent;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 60px;
+}
+
+.nav-btn svg {
+  stroke-width: 2;
+  transition: transform 0.2s ease, stroke 0.2s ease;
+}
+
+.nav-btn:hover {
+  color: #fff;
+}
+
+.nav-btn.active {
+  color: var(--accent-orange);
+}
+
+.nav-btn.active svg {
+  transform: translateY(-2px);
+}
+
+/* ==== View Panels (Routing) ==== */
+.view-panel {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.view-header {
+  margin-bottom: 1.2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 0.8rem;
+}
+
+.view-header h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.view-sub {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-top: 0.15rem;
+}
+
+/* Summary view items grouped by day */
+.my-day-group {
+  margin-bottom: 1.2rem;
+}
+
+.my-day-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--accent-cyan);
+  letter-spacing: 1px;
+  margin-bottom: 0.6rem;
+}
+
+/* ==== Alarms View ==== */
+.alarm-settings {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-bottom: 1.5rem;
+}
+
+.alarm-option-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: var(--shadow);
+}
+
+.alarm-option-info {
+  flex: 1;
+  padding-right: 1rem;
+}
+
+.alarm-option-info h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 0.2rem;
+}
+
+.alarm-option-info p {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* Toggle Switch Styles */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.1);
+  transition: .3s;
+  border-radius: 24px;
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .3s;
+  border-radius: 50%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+input:checked + .toggle-slider {
+  background-color: var(--accent-orange);
+}
+
+input:checked + .toggle-slider:before {
+  transform: translateX(20px);
+}
+
+/* Reminder Button Selectors */
+.reminder-select-group {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.reminder-btn {
+  padding: 0.4rem 0.8rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.reminder-btn.active {
+  background: var(--accent-cyan);
+  color: #080c14;
+  border-color: var(--accent-cyan);
+}
+
+.alarm-upcoming {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.upcoming-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+  margin-bottom: 0.8rem;
+}
+
+.upcoming-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.upcoming-alarm-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: var(--radius-md);
+  padding: 0.8rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.upcoming-alarm-card .alarm-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.upcoming-alarm-card .alarm-details .class-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.upcoming-alarm-card .alarm-details .alarm-time {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.15rem;
+}
+
+/* ==== Toast Notifications ==== */
+.toast {
+  position: fixed;
+  top: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(-100px);
+  background: rgba(18, 26, 44, 0.95);
+  border: 1px solid var(--accent-orange);
+  border-radius: var(--radius-md);
+  padding: 0.8rem 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  pointer-events: none;
+  opacity: 0;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+  max-width: 90%;
+  width: 320px;
+}
+
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+.toast-icon {
+  font-size: 1.1rem;
+  animation: wiggle 1s ease infinite alternate;
+}
+
+@keyframes wiggle {
+  from { transform: rotate(-10deg); }
+  to { transform: rotate(10deg); }
+}
+
+.toast-msg {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #fff;
+}

@@ -1,42 +1,153 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cozenton Park Classes</title>
-  <link rel="manifest" href="manifest.json" />
-  <link rel="stylesheet" href="index.css" />
-  <script defer src="app.js"></script>
-  <meta name="theme-color" content="#ff5e36" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="Cozenton Park Sports Centre - Fitness Class Timetable & Session Planner by JJM">
+  
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#ff5e36">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="JJM Classes">
+  
+  <title>JJM Gym Classes - Cozenton Park</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header class="app-header">
-    <div class="brand">
-      <img src="jjm_brand_1780443891862.png" alt="JJM" class="brand-icon" />
-      <h1>JJM</h1>
-    </div>
-    <a href="https://www.medway.gov.uk/info/200333/cozenton_park_sports_centre_formerly_splashes/945/gym_facilities_and_classes_at_cozenton_park_formerly_splashes" target="_blank" class="info-link">Info</a>
-  </header>
 
-  <div id="mainContent" class="grid-container">
-    <div class="schedule-container">
-    <table id="scheduleTable" class="schedule-table">
-      <thead>
-        <tr>
-          <th>Time</th>
-          <th>Session</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-        <tbody>
-        </tbody>
-    </table>
-  </div>
+  <!-- Toast Notification -->
+  <div id="toast" class="toast" role="alert">
+    <span id="toastIcon" class="toast-icon">🔔</span>
+    <span id="toastMsg" class="toast-msg">Notification</span>
   </div>
 
+  <!-- Alarm Sound (generated inline) -->
+  <audio id="alarmAudio" preload="auto"></audio>
 
+  <div class="app-shell">
 
-  <div id="modal" class="modal hidden" aria-hidden="true"></div>
-  <div id="toastContainer" class="toast-container"></div>
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-top">
+        <div class="brand">
+          <div class="brand-circle">JJM</div>
+          <div class="brand-text">
+            <h1>Cozenton Park</h1>
+            <span class="brand-sub">Fitness Class Timetable</span>
+          </div>
+        </div>
+        <a href="https://www.medway.gov.uk/info/200333/cozenton_park_sports_centre_formerly_splashes/1890/cozenton_park_fitness_timetable" 
+           target="_blank" rel="noopener" class="link-btn" title="View official Medway timetable">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        </a>
+      </div>
+
+      <!-- Day Selector Tabs -->
+      <div class="day-tabs" id="dayTabs" role="tablist">
+        <button class="day-tab" data-day="0">Mon</button>
+        <button class="day-tab" data-day="1">Tue</button>
+        <button class="day-tab" data-day="2">Wed</button>
+        <button class="day-tab" data-day="3">Thu</button>
+        <button class="day-tab" data-day="4">Fri</button>
+        <button class="day-tab" data-day="5">Sat</button>
+        <button class="day-tab" data-day="6">Sun</button>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+      <!-- Filter chips -->
+      <div class="filter-bar" id="filterBar">
+        <button class="filter-chip active" data-filter="all">All Classes</button>
+        <button class="filter-chip" data-filter="selected">⭐ My Sessions</button>
+      </div>
+
+      <!-- Session Cards List -->
+      <div class="session-list" id="sessionList">
+        <!-- Dynamically rendered -->
+      </div>
+
+      <!-- Empty state -->
+      <div class="empty-state" id="emptyState" style="display:none;">
+        <span class="empty-icon">📋</span>
+        <h3>No Sessions Found</h3>
+        <p>No classes match your current filter for this day.</p>
+      </div>
+    </main>
+
+    <!-- Bottom Nav -->
+    <nav class="bottom-nav" id="bottomNav">
+      <button class="nav-btn active" data-view="timetable">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <span>Timetable</span>
+      </button>
+      <button class="nav-btn" data-view="mysessions">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <span>My Plan</span>
+      </button>
+      <button class="nav-btn" data-view="alarms">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span>Alarms</span>
+      </button>
+    </nav>
+
+    <!-- My Sessions View (hidden by default) -->
+    <section class="view-panel" id="viewMySessions" style="display:none;">
+      <div class="view-header">
+        <h2>⭐ My Weekly Plan</h2>
+        <p class="view-sub">Your highlighted sessions across the week</p>
+      </div>
+      <div class="my-sessions-list" id="mySessionsList"></div>
+    </section>
+
+    <!-- Alarms View (hidden by default) -->
+    <section class="view-panel" id="viewAlarms" style="display:none;">
+      <div class="view-header">
+        <h2>🔔 Session Alarms</h2>
+        <p class="view-sub">Get reminded before your selected classes start</p>
+      </div>
+      <div class="alarm-settings" id="alarmSettings">
+        <div class="alarm-option-card">
+          <div class="alarm-option-info">
+            <h3>Enable Alarms</h3>
+            <p>Receive a notification before each highlighted session</p>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="alarmToggle">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="alarm-option-card">
+          <div class="alarm-option-info">
+            <h3>Reminder Time</h3>
+            <p>How many minutes before the class starts?</p>
+          </div>
+          <div class="reminder-select-group">
+            <button class="reminder-btn" data-mins="15">15 min</button>
+            <button class="reminder-btn active" data-mins="30">30 min</button>
+            <button class="reminder-btn" data-mins="60">1 hour</button>
+          </div>
+        </div>
+        <div class="alarm-option-card">
+          <div class="alarm-option-info">
+            <h3>Alarm Sound</h3>
+            <p>Play a sound when the alarm fires</p>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="alarmSoundToggle" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+      <div class="alarm-upcoming" id="alarmUpcoming">
+        <h3 class="upcoming-title">Upcoming Alarms</h3>
+        <div class="upcoming-list" id="upcomingAlarmList"></div>
+      </div>
+    </section>
+
+  </div>
+
+  <script src="app.js"></script>
 </body>
 </html>
